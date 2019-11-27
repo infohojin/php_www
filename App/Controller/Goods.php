@@ -16,10 +16,33 @@ class Goods extends Controller
         if($second == "new") {
             // 데이터삽입
             $this->newInsert();
+
+        } else if(is_numeric($second)) {
+            $this->detailView($second);
+
         } else {
             // 목록
             $this->goods();
         }        
+    }
+
+    private function detailView($id)
+    {
+        // step1. 데이터 조회
+        $query = "SELECT * from goods WHERE id = ".$id;
+        echo $query;
+        $result = $this->db->queryExecute($query);
+        $data = mysqli_fetch_object($result);
+        // print_r($data);
+
+        $body = file_get_contents("../Resource/goods_view.html");
+        $body = str_replace("{{goodname}}",$data->goodname, $body); // 데이터 치환
+        $body = str_replace("{{images}}","<img src='/images/".$data->images."' width='100%'>", $body); // 데이터 치환
+        $body = str_replace("{{price}}",$data->price, $body); // 데이터 치환
+        echo $body;
+
+        $query = "UPDATE goods SET `click`=`click`+1 where id='$id'";
+        $result = $this->db->queryExecute($query);
     }
 
     private function newInsert()
@@ -44,7 +67,7 @@ class Goods extends Controller
     private function goods()
     {
         echo "쇼핑몰 상품목록";
-        $query = "SELECT * from Goods";
+        $query = "SELECT * from Goods order by click desc;";
         $result = $this->db->queryExecute($query);
 
         $count = mysqli_num_rows($result);
@@ -59,10 +82,12 @@ class Goods extends Controller
                 <div class=\"row\">
                 ";
             }
-          
+            
+            $link = $_SERVER['REQUEST_URI']."/".$row->id;
+
             $content .= "<div class=\"col-sm\">";
-            $content .="<div>상품명:".$row->goodname."</div>";
-            $content .="<div><img src='/images/".$row->images."' width='100%' /></div>";
+            $content .="<div>상품명:<a href='$link'>".$row->goodname."</a>(".$row->click.")</div>";
+            $content .="<div><a href='$link'><img src='/images/".$row->images."' width='100%' /></a></div>";
             $content .="<div>가격:".$row->price."</div>";
             $content .= "</div>";
         }
