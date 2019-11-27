@@ -28,6 +28,12 @@ class Goods extends Controller
 
     private function detailView($id)
     {
+        if($_POST && $_POST['mode']=="addcart") {
+            echo "장바구니. 아싸 구매다...";
+            $query = "INSERT INTO cart (good,email) VALUES ('".$_POST['uid']."','".$_SESSION["email"]."')";
+            $result = $this->db->queryExecute($query);
+        }
+
         // step1. 데이터 조회
         $query = "SELECT * from goods WHERE id = ".$id;
         echo $query;
@@ -39,6 +45,7 @@ class Goods extends Controller
         $body = str_replace("{{goodname}}",$data->goodname, $body); // 데이터 치환
         $body = str_replace("{{images}}","<img src='/images/".$data->images."' width='100%'>", $body); // 데이터 치환
         $body = str_replace("{{price}}",$data->price, $body); // 데이터 치환
+        $body = str_replace("{{id}}",$data->id, $body);
         echo $body;
 
         $query = "UPDATE goods SET `click`=`click`+1 where id='$id'";
