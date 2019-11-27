@@ -99,9 +99,26 @@ class Goods extends Controller
         // MVC 패턴에서 view 화면 분리.
         $body = file_get_contents("../Resource/goods.html");
         $body = str_replace("{{content}}",$content, $body); // 데이터 치환
+        $body = str_replace("{{categori}}",$this->cate(), $body);
 
         // 테이블 별로 new 버튼 링크 생성
         $body = str_replace("{{new}}","/goods/new", $body);
         echo $body;
+    }
+
+    private function cate()
+    {
+        $query = "SELECT * from categori";
+        $result = $this->db->queryExecute($query);
+        $count = mysqli_num_rows($result);
+
+        $cate = "";
+        for ($i=0,$j=1;$i<$count;$i++,$j++) {
+            $row = mysqli_fetch_object($result);
+            // print_r($row);
+            $cate .= "<a href=\"#\" class=\"list-group-item\">".$row->cate."</a>";
+        }
+
+        return $cate;
     }
 }
