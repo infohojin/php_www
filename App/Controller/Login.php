@@ -1,6 +1,6 @@
 <?php
 namespace App\Controller;
-class Login
+class Login extends Controller
 {
     private $db;
     public function __construct($db)
