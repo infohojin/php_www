@@ -2,11 +2,13 @@
 namespace App\Controller;
 class Databases extends Controller
 {
-    private $db;
-    // 생성자
+    private $db; // 변수, 
+    // 생성자 처리
     public function __construct($db)
     {
         // echo __CLASS__;
+        // 외부에서 넘겨오는 DB정보 내부에 저장한다.
+        // 내부에 저장한다 의미 ==> 객체 상태값 지정한다. 
         $this->db = $db; 
     }
 

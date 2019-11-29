@@ -90,13 +90,8 @@ class Goods extends Controller
                 ";
             }
             
-            $link = $_SERVER['REQUEST_URI']."/".$row->id;
-
-            $content .= "<div class=\"col-sm\">";
-            $content .="<div>상품명:<a href='$link'>".$row->goodname."</a>(".$row->click.")</div>";
-            $content .="<div><a href='$link'><img src='/images/".$row->images."' width='100%' /></a></div>";
-            $content .="<div>가격:".$row->price."</div>";
-            $content .= "</div>";
+            // $link = ;
+            $content .= $this->cell($_SERVER['REQUEST_URI']."/".$row->id, $row);
         }
 
         $content .= "</div>
@@ -111,6 +106,16 @@ class Goods extends Controller
         // 테이블 별로 new 버튼 링크 생성
         $body = str_replace("{{new}}","/goods/new", $body);
         echo $body;
+    }
+
+    public function cell($link, $row)
+    {
+        $content = "<div class=\"col-sm\">";
+        $content .="<div>상품명:<a href='$link'>".$row->goodname."</a>(".$row->click.")</div>";
+        $content .="<div><a href='$link'><img src='/images/".$row->images."' width='100%' /></a></div>";
+        $content .="<div>가격:".$row->price."</div>";
+        $content .= "</div>";
+        return $content;
     }
 
     private function cate()
